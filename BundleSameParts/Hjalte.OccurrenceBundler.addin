@@ -1,0 +1,14 @@
+﻿<Addin Type="Standard">
+  <ClassId>{1cecf0ae-ce16-4473-9b8b-320842f927f3}</ClassId>
+  <ClientId>{1cecf0ae-ce16-4473-9b8b-320842f927f3}</ClientId>
+  <DisplayName>Hjalte.OccurrenceBundler</DisplayName>
+  <Description>This addon bundles occurences of the same file in 1 folder.</Description>
+  <Assembly>Hjalte.OccurrenceBundler.dll</Assembly>
+  <LoadOnStartUp>1</LoadOnStartUp>
+  <UserUnloadable>0</UserUnloadable>one
+  <Hidden>0</Hidden>
+  <SupportedSoftwareVersionGreaterThan>21..</SupportedSoftwareVersionGreaterThan>
+  <DataVersion>1</DataVersion>
+  <UserInterfaceVersion>1</UserInterfaceVersion>
+  <LoadBehavior>0</LoadBehavior>
+</Addin>
