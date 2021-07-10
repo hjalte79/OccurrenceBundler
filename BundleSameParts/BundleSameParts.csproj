@@ -47,7 +47,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="OccurrenceBundler.cs" />
+    <Compile Include="BrowserManipulator.cs" />
+    <Compile Include="OccurrenceBundlerByFileName.cs" />
+    <Compile Include="OccurrenceBundlerByProperty.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StandardAddInServer.cs" />
   </ItemGroup>

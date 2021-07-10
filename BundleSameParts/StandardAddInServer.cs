@@ -31,14 +31,19 @@ namespace Hjalte.OccurrenceBundler
         //https://forums.autodesk.com/t5/inventor-ideas/bundle-multiple-instances-of-same-part-in-assembly-tree/idi-p/5643016
 
         private Application inventor;
-        private OccurrenceBundler occurrenceBundler;
+        private OccurrenceBundlerByFileName occurrenceBundlerByFileName;
+        private OccurrenceBundlerByProperty occurrenceBundlerByProperty;
+
         public void Activate(ApplicationAddInSite addInSiteObject, bool firstTime)
         {
             inventor = addInSiteObject.Application;
+            BrowserManipulator.inventor = inventor;
 
-            occurrenceBundler = new OccurrenceBundler(inventor, this.getGUID());
-            inventor.CommandManager.UserInputEvents.OnContextMenu += occurrenceBundler.OnContextMenu;
+            occurrenceBundlerByFileName = new OccurrenceBundlerByFileName(inventor, this.getGUID());
+            inventor.CommandManager.UserInputEvents.OnContextMenu += occurrenceBundlerByFileName.OnContextMenu;
 
+            occurrenceBundlerByProperty = new OccurrenceBundlerByProperty(inventor, this.getGUID());
+            inventor.CommandManager.UserInputEvents.OnContextMenu += occurrenceBundlerByProperty.OnContextMenu;
         }
 
         private string getGUID()
