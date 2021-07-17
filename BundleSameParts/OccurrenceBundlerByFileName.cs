@@ -7,32 +7,31 @@ using Inventor;
 
 namespace Hjalte.OccurrenceBundler
 {
-    public class OccurrenceBundlerByFileName
+    public class OccurrenceBundlerByFileName : iOccurrenceBundler
     {
-        private ButtonDefinition bundleButtonDefinition;
-        private Application inventor;
-        private const string MODELBROWSERNAME = "AmBrowserArrangement";
-        
+        private ButtonDefinition bundleButtonDefinition;        
 
-        public OccurrenceBundlerByFileName(Application inventor, string GUID)
+        public OccurrenceBundlerByFileName()
         {
-            this.inventor = inventor;
-            
-            bundleButtonDefinition = inventor.CommandManager.ControlDefinitions.AddButtonDefinition(
-                    "Bundle same files in folder.", "Hjalte.OccurrenceBundler.handler",
-                    CommandTypesEnum.kSchemaChangeCmdType, GUID,
-                    "Bundle same files in folder.", "Bundle same files in folder.");
+            string name = "Bundle by file name";
+            bundleButtonDefinition = Globals.inventor.CommandManager.ControlDefinitions.AddButtonDefinition(
+                    name, "Hjalte.OccurrenceBundler.handler",
+                    CommandTypesEnum.kSchemaChangeCmdType, Globals.GUID,
+                    name, name);
             bundleButtonDefinition.OnExecute += onClickBundle;
+
+            Globals.inventor.CommandManager.UserInputEvents.OnContextMenu += OnContextMenu;
         }
         public void OnContextMenu(SelectionDeviceEnum SelectionDevice, NameValueMap AdditionalInfo, CommandBar CommandBar)
         {
-
-            Document oDoc = inventor.ActiveDocument;
+            if (SelectionDevice != SelectionDeviceEnum.kBrowserSelection) return;
+            if (Globals.Settings.bundleByFileName == false) return;
+            Document oDoc = Globals.inventor.ActiveDocument;
             if (!(oDoc is AssemblyDocument)) return;
             AssemblyDocument doc = (AssemblyDocument)oDoc;
 
-
-            BrowserNode selectedNode = BrowserManipulator.getSelectedNode(doc.BrowserPanes[MODELBROWSERNAME].TopNode);
+            if (doc.BrowserPanes[Globals.MODELBROWSERNAME].TopNode.Selected == true) return;
+            BrowserNode selectedNode = BrowserManipulator.getSelectedNode(doc.BrowserPanes[Globals.MODELBROWSERNAME].TopNode);
 
             if (selectedNode == null) return;
 
@@ -52,11 +51,11 @@ namespace Hjalte.OccurrenceBundler
         }
         private void onClickBundle(NameValueMap Context)
         {
-            Document oDoc = inventor.ActiveDocument;
+            Document oDoc = Globals.inventor.ActiveDocument;
             if (!(oDoc is AssemblyDocument)) return;
 
             AssemblyDocument doc = (AssemblyDocument)oDoc;
-            BrowserPane browserPane = doc.BrowserPanes[MODELBROWSERNAME];
+            BrowserPane browserPane = doc.BrowserPanes[Globals.MODELBROWSERNAME];
             BrowserNode topNode = browserPane.TopNode;
 
             BrowserNode selectedNode = BrowserManipulator.getSelectedNode(topNode);
@@ -75,7 +74,10 @@ namespace Hjalte.OccurrenceBundler
                 {
                     folder.Add(foundNode);
                 }
-                folder.Name = nodesWithFileName.Count + "x " + System.IO.Path.GetFileNameWithoutExtension(fileToBundle);
+                folder.Name = string.Format(
+                        Globals.Settings.folderNameTemplate,
+                        nodesWithFileName.Count,
+                        System.IO.Path.GetFileNameWithoutExtension(fileToBundle));
             }
             else if (selectedNode.NativeObject is BrowserFolder)
             {
@@ -94,7 +96,10 @@ namespace Hjalte.OccurrenceBundler
                     {
                         folder.Add(foundNode);
                     }
-                    folder.Name = nodesWithFileName.Count + "x " + System.IO.Path.GetFileNameWithoutExtension(fileToBundle);
+                    folder.Name = string.Format(
+                        Globals.Settings.folderNameTemplate,
+                        nodesWithFileName.Count,
+                        System.IO.Path.GetFileNameWithoutExtension(fileToBundle));
                 }
             }            
         }

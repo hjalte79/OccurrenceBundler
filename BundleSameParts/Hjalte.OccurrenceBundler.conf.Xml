@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Settings xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <bundleByFileName>true</bundleByFileName>
+  
+  <bundleByProperty>true</bundleByProperty>
+  <!--
+    Valid values:
+      Inventor Document Summary Information
+      Inventor Summary Information
+      Design Tracking Properties
+      Inventor User Defined Properties
+  -->
+  <iPropertySetName>Inventor User Defined Properties</iPropertySetName>
+  <iPropertyName>Assembly_Folder</iPropertyName>
+  
+  <!--
+  The text {0} will be replaced with the number of occurences in the folder
+  The text {1} will be replaced with the name
+  -->
+  <folderNameTemplate>{0}x {1}</folderNameTemplate>
+</Settings>

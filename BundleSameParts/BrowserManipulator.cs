@@ -10,7 +10,7 @@ namespace Hjalte.OccurrenceBundler
     public static class BrowserManipulator
     {
         private const string MODELBROWSERNAME = "AmBrowserArrangement";
-        public static Inventor.Application inventor;
+        
 
         public static BrowserFolder getFolderForFile(BrowserPane browserPane, string searchedFileName)
         {
@@ -40,7 +40,7 @@ namespace Hjalte.OccurrenceBundler
 
             if (folder == null)
             {
-                ObjectCollection colNodes = inventor.TransientObjects.CreateObjectCollection();
+                ObjectCollection colNodes = Globals.inventor.TransientObjects.CreateObjectCollection();
                 folder = browserPane.AddBrowserFolder("temp", colNodes);
             }
 
@@ -75,14 +75,38 @@ namespace Hjalte.OccurrenceBundler
             BrowserNode foundNode = null;
             foreach (BrowserNode node in topNode.BrowserNodes)
             {
-                if (node.Selected) return node;
-                foundNode = getSelectedNode(node);
-                if (foundNode != null)
+                // For some unknow reason interface checking doesn't work here...
+                // there for the function nodeNativeObjectIs() is used! 
+                if (node.NativeObject == null) continue;
+                //if (node.NativeObject is ComponentOccurrences )
+                if (nodeNativeObjectIs(node, ObjectTypeEnum.kComponentOccurrenceObject))
                 {
-                    return foundNode;
+                    if (node.Selected) return node;
+                }
+                //f (node.NativeObject is BrowserFolder)
+                if (nodeNativeObjectIs(node, ObjectTypeEnum.kBrowserFolderObject))
+                {
+                    foundNode = getSelectedNode(node);
+                    if (foundNode != null)
+                    {
+                        return foundNode;
+                    }
                 }
             }
             return foundNode;
+        }
+
+        public static bool nodeNativeObjectIs(BrowserNode node , ObjectTypeEnum inventorType)
+        {
+            try
+            {
+                dynamic nativeObject = node.NativeObject;
+                ObjectTypeEnum inventorTypeOrg = (ObjectTypeEnum)nativeObject.Type;
+                if (inventorType == inventorTypeOrg) return true;
+            }
+            catch (Exception ex) { }
+
+            return false;
         }
     }
 }
